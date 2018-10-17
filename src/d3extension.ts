@@ -3,6 +3,7 @@
 import * as vscode from 'vscode';
 import * as cp from 'child_process';
 
+// abstracts D3 library?
 export class D3Extension
 {
     private _output : vscode.OutputChannel;
@@ -13,10 +14,13 @@ export class D3Extension
         this._output = vscode.window.createOutputChannel("D3Extension");
         this._rootPath = rootPath;
         this._profilerBinPath = binPath;
-        console.log("Created D3Extension instance");
+        console.log("Created D3Extension instance-----------------------------")
+        console.log("binPath", binPath)
+        console.log("rootPath", rootPath)
     }
 
     testOutput(message : string) : void {
+        console.log("coming to testOutput")
         this._output.clear();
         let channel : vscode.OutputChannel = this._output;
         let errString : string = "";

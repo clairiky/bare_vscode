@@ -5,6 +5,7 @@
 {
 	"version": "0.2.0",
     "configurations": [
+
         {
             "name": "Extension",
             "type": "extensionHost",
@@ -17,6 +18,7 @@
                 "${workspaceFolder}/out/**/*.js"
             ],
             "preLaunchTask": "npm: watch"
+            
         },
         {
             "name": "Extension Tests",
@@ -31,6 +33,7 @@
                 "${workspaceFolder}/out/test/**/*.js"
             ],
             "preLaunchTask": "npm: watch"
+
         }
     ]
 }

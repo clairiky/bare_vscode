@@ -108,7 +108,8 @@ export function deactivate() {
 function getHtmlContent(extensionPath : string) : string {
     let resourcePath = path.join(extensionPath, 'resources');
     let htmlTemplate = fs.readFileSync(path.join(resourcePath, "index.html"), "utf8");
-
+    //let data4 = fs.readFileSync(path.join(resourcePath, "/data/data2.json"), "utf8");
+    //console.log(`data from ${data4}.`);
     const columns = [
                     ['KindofOpen', 4],
                     ['Closedx', 2],
