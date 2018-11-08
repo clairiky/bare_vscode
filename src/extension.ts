@@ -33,7 +33,7 @@ export function activate(context: vscode.ExtensionContext) {
     let mediaPath = path.join(extensionPath, 'resources');
     let tmpfile = path.join(os.tmpdir(),'out.txt');
     let currentPanel : vscode.WebviewPanel | undefined = undefined;
-
+    let sourcePanel : vscode.WebviewPanel | undefined = undefined;
     currentPanel = vscode.window.createWebviewPanel("testType", "Testing Panel", vscode.ViewColumn.Two, { enableScripts : true } );
 
     console.log(`Extension "callVTune" is now active, running from ${profilerDriverPath}.`);
@@ -55,6 +55,18 @@ export function activate(context: vscode.ExtensionContext) {
 
     let d3Extension : d3x.D3Extension = new d3x.D3Extension(extensionPath, tmpfile, <string>(profilerDriverPath), currentPanel);
     d3Extension.testOutput("Trying to output to channel");
+    currentPanel.webview.onDidReceiveMessage(msg => {
+        vscode.window.showInformationMessage(`Seems like I got a message ${msg.command}!`);
+        //sourcePanel = vscode.window.createWebviewPanel("Source", "Source Panel", vscode.ViewColumn.Three, { enableScripts : true } );
+        //sourcePanel.webview.html = getSourceWebviewContent();
+        // var uri = vscode.Uri.file("C:\\Users\\clairiky\\Work\\WOS\\PTVS\\examples\\cython\\cython_example_proj\\__init__.py");
+        // vscode.workspace.openTextDocument(uri).then(doc => {
+        //     vscode.window.showTextDocument(doc);
+		// 	console.log('Source file opened');
+		// }, err => {
+		// 	console.log(`Failed to load '${uri.toString()}'\n\n${String(err)}`, '');
+		// });
+     }, undefined, context.subscriptions);
     context.subscriptions.push(d3Extension); 
     let createPanelDisposable = vscode.commands.registerCommand('extension.testD3js', () => {
 
@@ -95,12 +107,13 @@ export function deactivate() {
 
 export function getHtmlContent(extensionPath : string) : string {
     let resourcePath = path.join(extensionPath, 'resources');
+    let scriptPath = vscode.Uri.file(path.join(resourcePath, 'main.js')).with({ scheme : 'vscode-resource'});
     // Async read
     //let datajson = fs.readFile(path.join(resourcePath, "/data/data2.json"), "utf8", 
     //                function(err, contents){console.log(`data found ${contents}.`);});
 
     let htmlTemplate = fs.readFileSync(path.join(resourcePath, "index.html"), "utf8");
-    let datajson = fs.readFileSync(path.join(resourcePath, "/data/data2.json"), "utf8");
+    let datajson = fs.readFileSync(path.join(resourcePath, "/data/profile_data.json"), "utf8");
     console.log(`data found ${datajson}.`);
     const columns = [
                     ['KindofOpen', 4],
@@ -112,8 +125,23 @@ export function getHtmlContent(extensionPath : string) : string {
 
     let result = interpolateTemplate(htmlTemplate, {
         columnsFromHost : JSON.stringify(columns),// kind of stupid, but haven't found a better way yet
-        columnsFromHost2 : datajson
+        columnsFromHost2 : datajson,
+        script : scriptPath
     });
     
     return result;
+}
+
+function getSourceWebviewContent() {
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Source</title>
+</head>
+<body>
+    <h1>Source</h1>
+</body>
+</html>`;
 }
