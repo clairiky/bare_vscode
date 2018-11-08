@@ -237,6 +237,15 @@ function onTextboxFilterChanged() {
 
 // setup the grid after the page has finished loading
 document.addEventListener('DOMContentLoaded', function() {
+  //ag-grid setting up the appropriate theme
+  if(document.body.className == "vscode-light"){
+        document.getElementById("myGrid").classList.remove('ag-theme-dark');
+        document.getElementById("myGrid").classList.add('ag-theme-blue');
+    } else {
+        document.getElementById("myGrid").classList.remove('ag-theme-blue');
+        document.getElementById("myGrid").classList.add('ag-theme-dark');
+    }
+  
     var gridDiv = document.querySelector('#myGrid');
     new agGrid.Grid(gridDiv, gridOptions);
     gridOptions.api.sizeColumnsToFit();
